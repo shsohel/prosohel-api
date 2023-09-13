@@ -1,0 +1,7 @@
+[
+	{
+		"name": "Admin",
+		"permissions": ["BLOG.ADD", "BLOG.DELETE"]
+	}
+
+]

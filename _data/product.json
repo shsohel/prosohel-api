@@ -1,0 +1,18 @@
+[
+  {
+    "name": "TShirts 5454",
+    "sku": "SKU-644",
+    "price": 3500,
+    "salePrice": 3500,
+    "imgUrl": {
+      "url": "photo_5d713995b721c3bb38c1f5d0.jpg",
+      "isDefault": true
+    },
+
+    "discount": "63fa546aa13d291645d37a62",
+    "productCategory": "63fa546aa13d291645d37a62",
+    "productSubCategory": "63f9103c8047ded7479e6307",
+    "isActive": true,
+    "description": "The is a sports category"
+  }
+]
