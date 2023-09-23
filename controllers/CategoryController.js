@@ -1,6 +1,6 @@
-const asyncHandler = require('../middleware/async');
-const Category = require('../models/Category');
-const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require("../middleware/async");
+const Category = require("../models/Category");
+const ErrorResponse = require("../utils/errorResponse");
 
 exports.filterCategorySection = (s, requestBody) => {
   console.log(requestBody);
@@ -22,8 +22,6 @@ exports.getCategories = asyncHandler(async (req, res, next) => {
 // @access   Public
 exports.createCategory = asyncHandler(async (req, res, next) => {
   const category = await Category.create(req.body);
-  console.log(category);
-
   res.status(201).json({
     succeed: true,
     data: category,
@@ -35,59 +33,67 @@ exports.createCategory = asyncHandler(async (req, res, next) => {
 // @route   /api/v1/category/:id
 // @access   Public
 exports.getCategory = asyncHandler(async (req, res, next) => {
-  const category = await Category.findById(req.params.id).populate([
-    'blogs',
-    'subCategories',
-  ]);
+  const category = await Category.findById(req.params.id);
 
   if (!category) {
     return next(
-      new ErrorResponse(`Category not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Category not found with id of ${req.params.id}`, 404),
     );
   }
+
+  const allCategory = await Category.find();
+
+  const jsonCategory = JSON.parse(JSON.stringify(category));
+  const jsonAllCategory = JSON.parse(JSON.stringify(allCategory));
+  const subCategory = jsonAllCategory.filter((c) => !c.isParent);
+
+  const getSubCategory = (parentId) => {
+    const sub = subCategory.filter(
+      (subCat) => subCat.parentCategory === parentId,
+    );
+    return sub;
+  };
+
+  const finalCategory = {
+    ...jsonCategory,
+    subCategory: getSubCategory(jsonCategory.id),
+  };
+
   res.status(200).json({
     success: true,
-    data: category,
+    data: finalCategory,
   });
 });
-// @desc   fetch single category
-// @route   /api/v1/category/:id
+// @desc   fetch Menu category
+// @route   /api/v1/category/get-category-menu
 // @access   Public
 exports.getCategoryMenu = asyncHandler(async (req, res, next) => {
-  const category = await Category.find().populate['subCategories'];
+  const category = await Category.find();
+
+  const jsonCategory = JSON.parse(JSON.stringify(category));
+  const parentCategory = jsonCategory.filter((c) => c.isParent);
+  const subCategory = jsonCategory.filter((c) => !c.isParent);
+
+  const getSubCategory = (parentId) => {
+    const sub = subCategory.filter(
+      (subCat) => subCat.parentCategory === parentId,
+    );
+    return sub;
+  };
+
+  const menuCategory = parentCategory.map((c) => ({
+    ...c,
+    subCategory: getSubCategory(c.id),
+  }));
 
   if (!category) {
-    return next(new ErrorResponse(`Category not found with id of `, 404));
+    return next(new ErrorResponse(`The menu category is not found!!! `, 404));
   }
   res.status(200).json({
     success: true,
-    data: category,
+    data: menuCategory,
   });
 });
-
-// exports.getProductSubCategoryByCategoryId = asyncHandler(
-//   async (req, res, next) => {
-//     const category = await Category.findById(req.params.id).populate([
-//       'productSubCategories',
-//     ]);
-
-//     if (!category) {
-//       return next(
-//         new ErrorResponse(
-//           `Category not found with id of ${req.params.id}`,
-//           404
-//         )
-//       );
-//     }
-
-//     const productSubCategory = category?.productSubCategories ?? [];
-
-//     res.status(200).json({
-//       success: true,
-//       data: productSubCategory,
-//     });
-//   }
-// );
 
 // @desc   update single category
 // @route   /api/v1/category/:id
@@ -108,14 +114,14 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
     return next(
       new ErrorResponse(
         `The name ( ${duplicateItem.name}) used another Category`,
-        409
-      )
+        409,
+      ),
     );
   }
 
   if (!category) {
     return next(
-      new ErrorResponse(`Category not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Category not found with id of ${req.params.id}`, 404),
     );
   }
   res.status(200).json({
@@ -123,50 +129,6 @@ exports.updateCategory = asyncHandler(async (req, res, next) => {
     data: category,
   });
 });
-
-// @desc   insert product sub category
-// @route   /api/v1/category/:id/sub-category
-// @access   Public
-// exports.newProductSubCategory = asyncHandler(async (req, res, next) => {
-//   const submittedSubCategory = {
-//     name: req.body.subCategory,
-//     descriptions: req.body.subCategory,
-//   };
-//   const productSubCategory = await ProductSubCategory.create(
-//     submittedSubCategory
-//   );
-
-//   const category = await Category.findById(req.params.id);
-
-//   if (!category) {
-//     return next(
-//       new ErrorResponse(
-//         `Category not found with id of ${req.params.id}`,
-//         404
-//       )
-//     );
-//   }
-//   const productSubCategories = category.subCategories ?? [];
-
-//   const updateProductSubCategories = [
-//     ...productSubCategories,
-//     productSubCategory.id,
-//   ];
-
-//   const updatedBody = {
-//     subCategories: updateProductSubCategories,
-//   };
-
-//   await Category.findByIdAndUpdate(req.params.id, updatedBody, {
-//     new: true,
-//     runValidators: true,
-//   });
-
-//   res.status(200).json({
-//     success: true,
-//     data: productSubCategory,
-//   });
-// });
 
 // @desc   Delete single category
 // @route   /api/v1/category/:id
@@ -176,7 +138,7 @@ exports.deleteCategory = asyncHandler(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
   if (!category) {
     return next(
-      new ErrorResponse(`Category not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Category not found with id of ${req.params.id}`, 404),
     );
   }
 

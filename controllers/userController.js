@@ -1,6 +1,6 @@
-const asyncHandler = require('../middleware/async');
-const User = require('../models/User');
-const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require("../middleware/async");
+const User = require("../models/User");
+const ErrorResponse = require("../utils/errorResponse");
 
 exports.filterUserSection = (s, requestBody) => {
   return s.name
@@ -21,7 +21,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 // @access   Public
 exports.createUser = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
-  console.log('S', user);
+  console.log("S", user);
 
   res.status(201).json({
     succeed: true,
@@ -38,7 +38,7 @@ exports.getUser = asyncHandler(async (req, res, next) => {
 
   if (!user) {
     return next(
-      new ErrorResponse(`User not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`User not found with id of ${req.params.id}`, 404),
     );
   }
   res.status(200).json({
@@ -55,7 +55,7 @@ exports.getUserBySlug = asyncHandler(async (req, res, next) => {
   console.log(req.params.slug);
   if (!user) {
     return next(
-      new ErrorResponse(`User not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`User not found with id of ${req.params.id}`, 404),
     );
   }
   res.status(200).json({
@@ -81,14 +81,14 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
     return next(
       new ErrorResponse(
         `The name ( ${duplicateItem.name}) used another User`,
-        409
-      )
+        409,
+      ),
     );
   }
 
   if (!user) {
     return next(
-      new ErrorResponse(`User not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`User not found with id of ${req.params.id}`, 404),
     );
   }
   res.status(200).json({
@@ -104,11 +104,11 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.params.id);
   if (!user) {
     return next(
-      new ErrorResponse(`User not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`User not found with id of ${req.params.id}`, 404),
     );
   }
 
-  user.remove();
+  user.deleteOne();
 
   res.status(200).json({
     success: true,
@@ -117,11 +117,11 @@ exports.deleteUser = asyncHandler(async (req, res, next) => {
 });
 
 exports.updateUserPassword = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.params.id).select('+password');
+  const user = await User.findById(req.params.id).select("+password");
 
   if (!user) {
     return next(
-      new ErrorResponse(`User not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`User not found with id of ${req.params.id}`, 404),
     );
   }
 

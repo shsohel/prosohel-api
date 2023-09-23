@@ -1,7 +1,7 @@
-const asyncHandler = require('../middleware/async');
-const Bootcamp = require('../models/Bootcamps');
-const Course = require('../models/Course');
-const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require("../middleware/async");
+const Bootcamp = require("../models/Bootcamps");
+const Course = require("../models/Course");
+const ErrorResponse = require("../utils/errorResponse");
 
 // @desc   Get all Course
 // @route   /api/v1/courses
@@ -35,7 +35,7 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
   if (!course) {
     return next(
       new ErrorResponse(`No Course with id of ${req.params.id}`),
-      404
+      404,
     );
   }
 
@@ -55,7 +55,7 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
   if (!bootcamp) {
     return next(
       new ErrorResponse(`No Bootcamp with id of ${req.params.bootcampId}`),
-      404
+      404,
     );
   }
 
@@ -77,7 +77,7 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
   if (!course) {
     return next(
       new ErrorResponse(`No course with id of ${req.params.id}`),
-      404
+      404,
     );
   }
 
@@ -103,11 +103,11 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
   if (!course) {
     return next(
       new ErrorResponse(`No course with id of ${req.params.id}`),
-      404
+      404,
     );
   }
 
-  await course.remove();
+  await course.deleteOne();
 
   res.status(200).json({
     success: true,

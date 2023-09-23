@@ -16,7 +16,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .post(advancedResults(Tag, ["products"], filterTagSection), getTags)
+  .post(advancedResults(Tag, [], filterTagSection), getTags)
   .get(advancedResults(Tag), getTags);
 
 router.route("/new").post(createTag);

@@ -1,6 +1,6 @@
-const asyncHandler = require('../middleware/async');
-const Tag = require('../models/Tag');
-const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require("../middleware/async");
+const Tag = require("../models/Tag");
+const ErrorResponse = require("../utils/errorResponse");
 
 exports.filterTagSection = (s, requestBody) => {
   return s.name
@@ -34,11 +34,11 @@ exports.createTag = asyncHandler(async (req, res, next) => {
 // @route   /api/v1/tag/:id
 // @access   Public
 exports.getTag = asyncHandler(async (req, res, next) => {
-  const tag = await Tag.findById(req.params.id).populate(['products']);
+  const tag = await Tag.findById(req.params.id);
 
   if (!tag) {
     return next(
-      new ErrorResponse(`Tag not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Tag not found with id of ${req.params.id}`, 404),
     );
   }
   res.status(200).json({
@@ -66,14 +66,14 @@ exports.updateTag = asyncHandler(async (req, res, next) => {
     return next(
       new ErrorResponse(
         `The name ( ${duplicateItem.name}) used another Tag`,
-        409
-      )
+        409,
+      ),
     );
   }
 
   if (!tag) {
     return next(
-      new ErrorResponse(`Tag not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Tag not found with id of ${req.params.id}`, 404),
     );
   }
   res.status(200).json({
@@ -89,11 +89,11 @@ exports.deleteTag = asyncHandler(async (req, res, next) => {
   const tag = await Tag.findById(req.params.id);
   if (!tag) {
     return next(
-      new ErrorResponse(`Tag not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Tag not found with id of ${req.params.id}`, 404),
     );
   }
 
-  tag.remove();
+  tag.deleteOne();
 
   res.status(200).json({
     success: true,

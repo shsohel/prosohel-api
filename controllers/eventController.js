@@ -1,6 +1,6 @@
-const asyncHandler = require('../middleware/async');
-const Event = require('../models/Events');
-const ErrorResponse = require('../utils/errorResponse');
+const asyncHandler = require("../middleware/async");
+const Event = require("../models/Events");
+const ErrorResponse = require("../utils/errorResponse");
 
 // @desc   Get all event
 // @route   /api/v1/event
@@ -31,7 +31,7 @@ exports.getEvent = asyncHandler(async (req, res, next) => {
 
   if (!event) {
     return next(
-      new ErrorResponse(`Event not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Event not found with id of ${req.params.id}`, 404),
     );
   }
   res.status(200).json({
@@ -59,14 +59,14 @@ exports.updateEvent = asyncHandler(async (req, res, next) => {
     return next(
       new ErrorResponse(
         `The name ( ${duplicateItem.name}) used another Event`,
-        409
-      )
+        409,
+      ),
     );
   }
 
   if (!event) {
     return next(
-      new ErrorResponse(`Event not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Event not found with id of ${req.params.id}`, 404),
     );
   }
   res.status(200).json({
@@ -82,11 +82,11 @@ exports.deleteEvent = asyncHandler(async (req, res, next) => {
   const event = await Event.findById(req.params.id);
   if (!event) {
     return next(
-      new ErrorResponse(`Event not found with id of ${req.params.id}`, 404)
+      new ErrorResponse(`Event not found with id of ${req.params.id}`, 404),
     );
   }
 
-  event.remove();
+  event.deleteOne();
 
   res.status(200).json({
     success: true,

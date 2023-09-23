@@ -1,9 +1,9 @@
-const path = require('path');
-const asyncHandler = require('../middleware/async');
-const ErrorResponse = require('../utils/errorResponse');
-const uniqId = require('../utils/uniIdGenerator');
-const File = require('../models/File');
-const fs = require('fs');
+const path = require("path");
+const asyncHandler = require("../middleware/async");
+const ErrorResponse = require("../utils/errorResponse");
+const uniqId = require("../utils/uniIdGenerator");
+const File = require("../models/File");
+const fs = require("fs");
 exports.photoUpload = asyncHandler(async (req, res, next) => {
   if (!req.files) {
     return next(new ErrorResponse(`Please upload a file`, 400));
@@ -11,7 +11,7 @@ exports.photoUpload = asyncHandler(async (req, res, next) => {
 
   const file = req.files.file;
   ///Make sure the image is a photo
-  if (!file.mimetype.startsWith('image')) {
+  if (!file.mimetype.startsWith("image")) {
     return next(new ErrorResponse(`Please upload a photo`, 400));
   }
   ///Check filesize
@@ -19,8 +19,8 @@ exports.photoUpload = asyncHandler(async (req, res, next) => {
     return next(
       new ErrorResponse(
         `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
-        400
-      )
+        400,
+      ),
     );
   }
 
@@ -50,7 +50,7 @@ exports.photoNextUpload = asyncHandler(async (req, res, next) => {
 
   const file = req.files.file;
   ///Make sure the image is a photo
-  if (!file.mimetype.startsWith('image')) {
+  if (!file.mimetype.startsWith("image")) {
     return next(new ErrorResponse(`Please upload a photo`, 400));
   }
   ///Check filesize
@@ -58,8 +58,8 @@ exports.photoNextUpload = asyncHandler(async (req, res, next) => {
     return next(
       new ErrorResponse(
         `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
-        400
-      )
+        400,
+      ),
     );
   }
 
@@ -88,11 +88,11 @@ exports.removeFile = asyncHandler(async (req, res, next) => {
 
   try {
     fs.unlinkSync(filePath);
-    file.remove();
+    file.deleteOne();
     res.status(200).json({
       success: true,
-      data: '',
-      message: 'Delete File Successfully',
+      data: "",
+      message: "Delete File Successfully",
     });
   } catch (error) {
     return next(new ErrorResponse(`File is not Deleted`, 400));
