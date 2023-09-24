@@ -11,19 +11,13 @@ const BlogSchema = new mongoose.Schema(
     },
     slug: String,
 
-    categoryId: [
+    category: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "Categories",
       },
     ],
-    subCategoryId: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "Categories",
-      },
-    ],
-    tags: [
+    tag: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "Tags",
@@ -37,7 +31,8 @@ const BlogSchema = new mongoose.Schema(
     },
     keyword: [
       {
-        type: String,
+        type: mongoose.Schema.ObjectId,
+        ref: "Keywords",
       },
     ],
     metaDescription: {
@@ -66,9 +61,6 @@ const BlogSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    description: {
-      type: String,
-    },
   },
   {
     toJSON: { virtuals: true },
@@ -77,8 +69,38 @@ const BlogSchema = new mongoose.Schema(
   },
 );
 BlogSchema.pre("save", function (next) {
-  this.slug = slugify(this.name, { lower: true });
+  this.slug = slugify(this.title, { lower: true });
   next();
+});
+
+///Reverse Populate with virtuals
+BlogSchema.virtual("categories", {
+  ref: "Categories",
+  localField: "category",
+  foreignField: "_id",
+  justOne: false,
+});
+///Reverse Populate with virtuals
+BlogSchema.virtual("tags", {
+  ref: "Tags",
+  localField: "tag",
+  foreignField: "_id",
+  justOne: false,
+});
+///Reverse Populate with virtuals
+BlogSchema.virtual("keywords", {
+  ref: "Keywords",
+  localField: "keyword",
+  foreignField: "_id",
+  justOne: false,
+});
+
+///Reverse Populate with virtuals
+BlogSchema.virtual("comments", {
+  ref: "Comments",
+  localField: "_id",
+  foreignField: "blog",
+  justOne: false,
 });
 
 module.exports = mongoose.model("Blogs", BlogSchema);

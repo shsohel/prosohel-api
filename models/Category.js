@@ -39,11 +39,12 @@ CategorySchema.pre("save", function (next) {
   next();
 });
 
-// CategorySchema.virtual('subCategories', {
-//   ref: 'Categories',
-//   localField: 'parentCategory',
-//   foreignField: '_id',
-//   justOne: true,
-// });
+///Reverse Populate with virtual
+CategorySchema.virtual("blogs", {
+  ref: "Blogs",
+  localField: "_id",
+  foreignField: "category",
+  justOne: false,
+});
 
 module.exports = mongoose.model("Categories", CategorySchema);

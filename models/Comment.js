@@ -3,15 +3,30 @@ const { default: slugify } = require("slugify");
 
 const CommentSchema = new mongoose.Schema(
   {
-    description: {
+    details: {
       type: String,
       trim: true,
       unique: true,
-      required: [true, "Please add description"],
+      required: [true, "Please add a comment"],
     },
 
-    blogId: mongoose.Schema.ObjectId,
-    userId: mongoose.Schema.ObjectId,
+    isParent: {
+      type: Boolean,
+      default: true,
+    },
+
+    parentComment: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Comments",
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Users",
+    },
+    blog: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Blogs",
+    },
 
     isActive: {
       type: Boolean,
@@ -22,10 +37,6 @@ const CommentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
-    description: {
-      type: String,
-    },
   },
   {
     toJSON: { virtuals: true },
@@ -34,9 +45,18 @@ const CommentSchema = new mongoose.Schema(
   },
 );
 
-CommentSchema.pre("save", function (next) {
-  this.slug = slugify(this.name, { lower: true });
-  next();
+///Reverse Populate with virtuals
+CommentSchema.virtual("users", {
+  ref: "Users",
+  localField: "user",
+  foreignField: "_id",
+  justOne: false,
 });
-
+///Reverse Populate with virtuals
+CommentSchema.virtual("blogs", {
+  ref: "Blogs",
+  localField: "blog",
+  foreignField: "_id",
+  justOne: false,
+});
 module.exports = mongoose.model("Comments", CommentSchema);

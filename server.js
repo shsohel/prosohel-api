@@ -20,10 +20,12 @@ const fileUpload = require("./routes/fileupload");
 // const coupon = require('./routes/coupon');
 const tag = require("./routes/tag");
 const keyword = require("./routes/keyword");
+const blog = require("./routes/blog");
 const user = require("./routes/user");
 const auth = require("./routes/auth");
 const role = require("./routes/role");
 const category = require("./routes/category");
+const comment = require("./routes/comment");
 
 // const brand = require('./routes/brand');
 // const event = require('./routes/event');
@@ -103,6 +105,10 @@ app.use("/api/v1/user", user);
 app.use("/api/v1/role", role);
 ///Category Route
 app.use("/api/v1/category", category);
+///Blog Route
+app.use("/api/v1/blog", blog);
+///Comment Route
+app.use("/api/v1/comment", comment);
 
 ///Location Route
 app.use("/api/v1/location", location);
