@@ -3,4 +3,9 @@ const isObjEmpty = (obj) => {
   return Object?.keys(obj).length === 0;
 };
 
-module.exports = isObjEmpty;
+const jsonFormat = (obj) => {
+  const object = JSON.parse(JSON.stringify(obj));
+  return object;
+};
+
+module.exports = { isObjEmpty, jsonFormat };

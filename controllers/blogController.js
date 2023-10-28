@@ -1,5 +1,7 @@
+const { db } = require("../config/db");
 const asyncHandler = require("../middleware/async");
 const Blog = require("../models/Blog");
+const { jsonFormat } = require("../utils");
 const ErrorResponse = require("../utils/errorResponse");
 
 exports.filterBlogSection = (s, requestBody) => {
@@ -9,6 +11,35 @@ exports.filterBlogSection = (s, requestBody) => {
     .includes(requestBody.name.toLowerCase().trim());
 };
 
+// @desc   Get all blog
+// @route   /api/v1/blog
+// @access   Public
+exports.getAllPosts = async (req, res, next) => {
+  const insertIntoMongoDb = async (dt) => {
+    const submitedDt = dt.map((item) => ({
+      title: item.post_title,
+      slug: item.post_name,
+      category: ["653a310d765635d195ba92c1"],
+      tag: ["653a316d63bfe9e9c8bcb1a1"],
+      details: item.post_content,
+      keyword: ["653a41446070401861bd21bb"],
+      metaDescription: item.post_content.slice(0, 155),
+      metaTitle: item.post_title.slice(0, 58),
+      author: "653cd7398bbede0c9b0af031",
+    }));
+
+    await Blog.create(submitedDt);
+  };
+  const sql =
+    "SELECT * FROM `wpac_posts` WHERE post_type = 'post' AND post_status = 'publish'";
+
+  await db.query(sql, (err, result) => {
+    const mqlPosts = jsonFormat(result);
+    const total = mqlPosts.length;
+    // insertIntoMongoDb(mqlPosts);
+    res.status(200).json({ data: result, total });
+  });
+};
 // @desc   Get all blog
 // @route   /api/v1/blog
 // @access   Public

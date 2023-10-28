@@ -1,4 +1,4 @@
-const isObjEmpty = require('../utils');
+const { isObjEmpty } = require("../utils");
 
 const advancedResults =
   (model, populate, filterSection) => async (req, res, next) => {
@@ -7,7 +7,7 @@ const advancedResults =
     const reqQuery = { ...req.query };
 
     // Field to exclude
-    const removeFields = ['select', 'sort', 'orderBy'];
+    const removeFields = ["select", "sort", "orderBy"];
 
     //Loop over removeFields and Delete them from  reqQuery
     removeFields.forEach((param) => delete reqQuery[param]);
@@ -17,7 +17,7 @@ const advancedResults =
     //Create operators ($gt, $gte etc.)
     queryStr = queryStr.replace(
       /\b(gt|gte|lt|lte|in)\b/g,
-      (match) => `$${match}`
+      (match) => `$${match}`,
     );
 
     ///Finding resource
@@ -25,19 +25,19 @@ const advancedResults =
 
     ///Select Fields
     if (req.query.select) {
-      const fields = req.query.select.split(',').join(' ');
+      const fields = req.query.select.split(",").join(" ");
       query = query.select(fields);
     }
     ///Sort
     if (req.query.sort) {
       ///Default Order By Ascending
-      const orderBy = req.query?.orderBy ?? 'asc';
+      const orderBy = req.query?.orderBy ?? "asc";
 
-      const sortBy = req.query.sort.split(',').join(' ');
+      const sortBy = req.query.sort.split(",").join(" ");
 
-      query = query.sort(orderBy === 'desc' ? `-${sortBy}` : sortBy);
+      query = query.sort(orderBy === "desc" ? `-${sortBy}` : sortBy);
     } else {
-      query = query.sort('-createdAt');
+      query = query.sort("-createdAt");
     }
 
     ///Pagination

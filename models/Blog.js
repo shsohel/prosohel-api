@@ -6,8 +6,8 @@ const BlogSchema = new mongoose.Schema(
     title: {
       type: String,
       trim: true,
-      unique: true,
-      required: [true, "Please add title"],
+      // unique: true,
+      // required: [true, "Please add title"],
     },
     slug: String,
 
@@ -26,8 +26,8 @@ const BlogSchema = new mongoose.Schema(
     details: {
       type: String,
       trim: true,
-      unique: true,
-      required: [true, "Please add details "],
+      // unique: true,
+      // required: [true, "Please add details "],
     },
     keyword: [
       {
@@ -38,12 +38,12 @@ const BlogSchema = new mongoose.Schema(
     metaDescription: {
       type: String,
       trim: true,
-      required: [true, "Please add metaDescription "],
+      // required: [true, "Please add metaDescription "],
     },
     metaTitle: {
       type: String,
       trim: true,
-      required: [true, "Please add metaTitle "],
+      // required: [true, "Please add metaTitle "],
     },
 
     author: {
@@ -68,10 +68,10 @@ const BlogSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
-BlogSchema.pre("save", function (next) {
-  this.slug = slugify(this.title, { lower: true });
-  next();
-});
+// BlogSchema.pre("save", function (next) {
+//   this.slug = slugify(this.title, { lower: true });
+//   next();
+// });
 
 ///Reverse Populate with virtuals
 BlogSchema.virtual("categories", {

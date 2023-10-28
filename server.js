@@ -34,16 +34,18 @@ const comment = require("./routes/comment");
 const location = require("./routes/location");
 
 const cors = require("cors");
-const connectDB = require("./config/db");
+const { connectDB, mysqlConnect } = require("./config/db");
 const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
 const hpp = require("hpp");
+
 //Custom Environment File Run
 
 ///Database Connection Run
 connectDB();
+mysqlConnect();
 const app = express();
 app.use(
   cors({
